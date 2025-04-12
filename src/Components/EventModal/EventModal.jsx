@@ -3,33 +3,32 @@ import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal } from '../../Redux/store/modalSlice';
 import { createEvent, updateEvent } from '../../Redux/store/eventsSlice';
-import { FaTimes, FaTag, FaCalendarAlt, FaPlus } from 'react-icons/fa';
+import { FaTimes, FaPlus, FaTag, FaCalendarAlt } from 'react-icons/fa';
 
-const categories = ['exercise', 'eating', 'work', 'relax', 'family', 'social'];
+
+const categories = ['exercise','eating','work','relax','family','social'];
+
+function formatLocal(d) {
+  if (!d) return '';
+  const pad = n => n.toString().padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 export default function EventModal() {
   const dispatch = useDispatch();
-  const { isOpen, event } = useSelector(state => state.modal);
+  const { isOpen, event } = useSelector(s => s.modal);
 
-  const [title, setTitle] = useState('');
+  const [title, setTitle]       = useState('');
   const [category, setCategory] = useState(categories[0]);
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  const [start, setStart]       = useState('');
+  const [end, setEnd]           = useState('');
 
   useEffect(() => {
     if (event) {
       setTitle(event.title || '');
       setCategory(event.category || categories[0]);
-      setStart(
-        event.start
-          ? new Date(event.start).toISOString().slice(0, 16)
-          : ''
-      );
-      setEnd(
-        event.end
-          ? new Date(event.end).toISOString().slice(0, 16)
-          : ''
-      );
+      setStart(formatLocal(new Date(event.start)));
+      setEnd(formatLocal(new Date(event.end)));
     }
   }, [event]);
 
@@ -42,37 +41,33 @@ export default function EventModal() {
       title,
       category,
       start: new Date(start),
-      end: new Date(end),
+      end:   new Date(end),
     };
     if (event && event._id) dispatch(updateEvent(payload));
     else dispatch(createEvent(payload));
     dispatch(closeModal());
   };
 
+  const portalTarget = document.getElementById('modal-root') || document.body;
+
   return ReactDOM.createPortal(
     <div className="modal-backdrop">
       <div className="modal-container">
-        {/* Header */}
         <div className="modal-header">
           <div className="modal-title">
             <FaPlus className="icon-plus" />
             {event && event._id ? 'Edit Event' : 'Create New Event'}
           </div>
-          <button
-            className="modal-close"
-            onClick={() => dispatch(closeModal())}
-          >
+          <button className="modal-close" onClick={() => dispatch(closeModal())}>
             <FaTimes />
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="modal-form">
-          {/* Title */}
           <div className="form-group">
             <label>Title</label>
             <div className="input-group">
-              <FaTag className="input-icon" />
+              <FaTag className="input-icon"/>
               <input
                 type="text"
                 value={title}
@@ -83,30 +78,28 @@ export default function EventModal() {
             </div>
           </div>
 
-          {/* Category */}
           <div className="form-group">
             <label>Category</label>
             <div className="input-group">
-              <FaTag className="input-icon" />
+              <FaTag className="input-icon"/>
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
                 required
               >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {categories.map(c => (
+                  <option key={c} value={c}>
+                    {c.charAt(0).toUpperCase() + c.slice(1)}
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Start */}
           <div className="form-group">
             <label>Start Time</label>
             <div className="input-group">
-              <FaCalendarAlt className="input-icon" />
+              <FaCalendarAlt className="input-icon"/>
               <input
                 type="datetime-local"
                 value={start}
@@ -116,11 +109,10 @@ export default function EventModal() {
             </div>
           </div>
 
-          {/* End */}
           <div className="form-group">
             <label>End Time</label>
             <div className="input-group">
-              <FaCalendarAlt className="input-icon" />
+              <FaCalendarAlt className="input-icon"/>
               <input
                 type="datetime-local"
                 value={end}
@@ -130,7 +122,6 @@ export default function EventModal() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="modal-footer">
             <button
               type="button"
@@ -146,6 +137,6 @@ export default function EventModal() {
         </form>
       </div>
     </div>,
-    document.getElementById('modal-root') || document.body
+    portalTarget
   );
 }

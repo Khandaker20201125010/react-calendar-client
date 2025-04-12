@@ -1,45 +1,47 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import calendarApi from '../../Hooks/calendarApi';
 
+// Create Event thunk: returns event with real Date objects
+export const createEvent = createAsyncThunk(
+  'events/create',
+  async (event) => {
+    // simulate API delay...
+    await new Promise(r => setTimeout(r, 200));
+    return {
+      ...event,
+      _id: Date.now().toString(),
+      start: new Date(event.start),
+      end:   new Date(event.end),
+    };
+  }
+);
 
-export const fetchEvents = createAsyncThunk('events/fetch', async () => {
-  const res = await calendarApi.get('/events');
-  return res.data;
-});
-export const createEvent = createAsyncThunk('events/create', async (event) => {
-  const res = await calendarApi.post('/events', event);
-  return { ...event, _id: res.data.insertedId };
-});
-export const updateEvent = createAsyncThunk('events/update', async (event) => {
-  await calendarApi.put(`/events/${event._id}`, event);
-  return event;
-});
-export const deleteEvent = createAsyncThunk('events/delete', async (id) => {
-  await calendarApi.delete(`/events/${id}`);
-  return id;
-});
+// Update Event thunk: ensures Dates too
+export const updateEvent = createAsyncThunk(
+  'events/update',
+  async (event) => {
+    await new Promise(r => setTimeout(r, 200));
+    return {
+      ...event,
+      start: new Date(event.start),
+      end:   new Date(event.end),
+    };
+  }
+);
 
 const eventsSlice = createSlice({
   name: 'events',
-  initialState: { items: [], status: 'idle' },
+  initialState: { items: [] },
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchEvents.fulfilled, (state, action) => {
-        state.items = action.payload;
-        state.status = 'succeeded';
-      })
       .addCase(createEvent.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
       .addCase(updateEvent.fulfilled, (state, action) => {
         const idx = state.items.findIndex(e => e._id === action.payload._id);
-        if (idx >= 0) state.items[idx] = action.payload;
-      })
-      .addCase(deleteEvent.fulfilled, (state, action) => {
-        state.items = state.items.filter(e => e._id !== action.payload);
+        if (idx !== -1) state.items[idx] = action.payload;
       });
-  }
+  },
 });
 
 export default eventsSlice.reducer;

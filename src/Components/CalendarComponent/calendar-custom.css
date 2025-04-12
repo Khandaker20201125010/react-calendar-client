@@ -38,6 +38,7 @@
   width: 100%; padding: 8px 12px; padding-left: 36px;
   border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;
   box-sizing: border-box;
+  
 }
 .input-group input:focus,
 .input-group select:focus {
@@ -59,3 +60,40 @@
   background: #2563eb; border: none; color: #fff;
 }
 .btn-create:hover { background: #1e40af; }
+
+.rbc-time-view .rbc-time-slot {
+  height: 40px !important;
+}
+
+
+.rbc-time-view .rbc-timeslot-group {
+  min-height: 100px; 
+}
+/* Make sure each event fills its slot perfectly */
+.rbc-event {
+  height:100%;
+  width: 106% !important;
+  padding: 20px ;
+  margin: 0 ;
+  box-sizing: border-box;
+  border-radius: 0px;
+  overflow: hidden;
+}
+
+/* Center the content inside the event block */
+.rbc-event-content {
+  font-family: 'Poppins', sans-serif;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rbc-time-view .rbc-time-slot {
+  height: 40px !important; /* or 50px, etc */
+}

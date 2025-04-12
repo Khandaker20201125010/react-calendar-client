@@ -13,22 +13,19 @@ const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
 function CustomEvent({ event }) {
   return (
-    <div className="rbc-event-content">
-      {event.title
-        ? event.title
-        : new Date(event.start).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+    <div className="rbc-event-content ">
+      <div className="event-title">{event.title}</div>
+      {event.category && (
+        <div className={`event-category event-category--${event.category}`}>
+          {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
+        </div>
+      )}
     </div>
   );
 }
 function CalendarComponent() {
   const events = useSelector((state) => state.events.items);
   const dispatch = useDispatch();
-
-  // Log out what we're rendering
-  console.log('⏰ Events passed to calendar:', events);
 
   const handleSelectSlot = ({ start, end }) => {
     dispatch(openModal({ start, end }));
@@ -52,19 +49,19 @@ function CalendarComponent() {
 
   return (
     <DnDCalendar
-    selectable
-    localizer={localizer}
-    events={events}
-    defaultView={Views.WEEK}
-    views={{ day: true, week: true, month: true }}
-    step={15}
-    timeslots={1}
-    onSelectSlot={handleSelectSlot}
-    onEventDrop={handleEventDrop}
-    onEventResize={handleEventDrop}
-    components={{ event: CustomEvent }}   // ← use our custom renderer
-    style={{ height: '100vh' }}
-  />
+      selectable
+      localizer={localizer}
+      events={events}
+      defaultView={Views.WEEK}
+      views={{ day: true, week: true, month: true }}
+      step={15}
+      timeslots={1}
+      onSelectSlot={handleSelectSlot}
+      onEventDrop={handleEventDrop}
+      onEventResize={handleEventDrop}
+      components={{ event: CustomEvent }}   
+      style={{ height: '100vh' }}
+    />
   );
 }
 

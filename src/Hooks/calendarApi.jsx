@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const calendarApi = axios.create({
-    baseURL: 'http://localhost:5000' 
+    baseURL: 'https://react-calender-server.vercel.app' 
   });
   
   export default calendarApi;

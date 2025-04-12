@@ -11,9 +11,10 @@ import { updateEvent } from '../../Redux/store/eventsSlice';
 
 const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
+
 function CustomEvent({ event }) {
   return (
-    <div className="rbc-event-content ">
+    <div className="rbc-event-content">
       <div className="event-title">{event.title}</div>
       {event.category && (
         <div className={`event-category event-category--${event.category}`}>
@@ -23,6 +24,7 @@ function CustomEvent({ event }) {
     </div>
   );
 }
+
 function CalendarComponent() {
   const events = useSelector((state) => state.events.items);
   const dispatch = useDispatch();
@@ -35,18 +37,6 @@ function CalendarComponent() {
     dispatch(updateEvent({ ...event, start, end }));
   };
 
-
-  // const handleExternalDrop = ({ start, end }, e) => {
-  //   const task = JSON.parse(e.dataTransfer.getData('task'));
-  //   dispatch(openModal({
-  //     title: task.name,
-  //     start: start.toISOString(),
-  //     end: end.toISOString(),
-  //     category: task.category,
-  //     color: task.color
-  //   }));
-  // };
-
   return (
     <DnDCalendar
       selectable
@@ -56,11 +46,15 @@ function CalendarComponent() {
       views={{ day: true, week: true, month: true }}
       step={15}
       timeslots={1}
+      style={{ height: '100vh' }}
+      components={{ event: CustomEvent }}
       onSelectSlot={handleSelectSlot}
+      onSelectEvent={(event) => dispatch(openModal(event))} // ✅ EDIT MODE
       onEventDrop={handleEventDrop}
       onEventResize={handleEventDrop}
-      components={{ event: CustomEvent }}   
-      style={{ height: '100vh' }}
+      eventPropGetter={(event) => ({
+        className: `rbc-event ${event.category || ''}`,
+      })}
     />
   );
 }

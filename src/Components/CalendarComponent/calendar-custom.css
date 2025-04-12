@@ -1,3 +1,4 @@
+@import "tailwindcss";
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.25);
@@ -52,14 +53,7 @@
 .btn {
   font-size: 14px; padding: 8px 16px; border-radius: 4px; cursor: pointer;
 }
-.btn-cancel {
-  background: #fff; border: 1px solid #d1d5db; color: #374151;
-}
-.btn-cancel:hover { background: #f3f4f6; }
-.btn-create {
-  background: #2563eb; border: none; color: #fff;
-}
-.btn-create:hover { background: #1e40af; }
+
 
 .rbc-time-view .rbc-time-slot {
   height: 40px !important;
@@ -71,16 +65,15 @@
 }
 /* Make sure each event fills its slot perfectly */
 .rbc-event {
-  height:100%;
+  height:95%;
   width: 106% !important;
   padding: 20px ;
   margin: 0 ;
   box-sizing: border-box;
-  border-radius: 0px;
   overflow: hidden;
 }
 
-/* Center the content inside the event block */
+
 .rbc-event-content {
   font-family: 'Poppins', sans-serif;
   height: 100%;
@@ -95,5 +88,24 @@
   text-overflow: ellipsis;
 }
 .rbc-time-view .rbc-time-slot {
-  height: 40px !important; /* or 50px, etc */
+  height: 40px !important; 
 }
+.rbc-event.exercise {
+  background-color: #10b981; 
+}
+.rbc-event.eating {
+  background-color: #f59e0b; 
+}
+.rbc-event.work {
+  background-color: #6f9fec; 
+}
+.rbc-event.relax {
+  background-color: #b496f8; 
+}
+.rbc-event.family {
+  background-color: #e63030; 
+}
+.rbc-event.social {
+  background-color: #ee74b1; 
+}
+
